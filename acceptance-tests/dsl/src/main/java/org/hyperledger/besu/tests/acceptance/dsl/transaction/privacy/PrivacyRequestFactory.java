@@ -28,6 +28,8 @@ import org.hyperledger.besu.ethereum.privacy.group.FlexibleGroupManagement;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.PrivacyNode;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.PrivateTransactionGroupResponse;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.util.LogFilterJsonParameter;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -41,8 +43,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.tuweni.bytes.Bytes;
-import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
-import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.besu.Besu;

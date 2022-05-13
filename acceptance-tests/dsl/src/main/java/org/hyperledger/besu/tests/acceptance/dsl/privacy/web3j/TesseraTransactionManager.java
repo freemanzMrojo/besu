@@ -19,7 +19,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.besu.Besu;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -190,9 +189,9 @@ public class TesseraTransactionManager extends TransactionManager {
     final byte[] signedMessage;
 
     if (chainId > ChainId.NONE) {
-      signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
+      signedMessage = TesseraTransactionEncoder.signMessage(rawTransaction, chainId, credentials);
     } else {
-      signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+      signedMessage = TesseraTransactionEncoder.signMessage(rawTransaction, credentials);
     }
 
     return Numeric.toHexString(signedMessage);
