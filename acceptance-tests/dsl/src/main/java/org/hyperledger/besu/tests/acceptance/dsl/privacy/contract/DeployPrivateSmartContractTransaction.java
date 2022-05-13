@@ -14,6 +14,8 @@
  */
 package org.hyperledger.besu.tests.acceptance.dsl.privacy.contract;
 
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.NodeRequests;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.Transaction;
 
@@ -25,11 +27,9 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.Contract;
-import org.web3j.tx.PrivateTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.BesuPrivacyGasProvider;
 import org.web3j.tx.gas.ContractGasProvider;
-import org.web3j.utils.Base64String;
 import org.web3j.utils.Restriction;
 
 public class DeployPrivateSmartContractTransaction<T extends Contract> implements Transaction<T> {
@@ -40,8 +40,8 @@ public class DeployPrivateSmartContractTransaction<T extends Contract> implement
 
   private final Class<T> clazz;
   private final Credentials senderCredentials;
-  private final Base64String privateFrom;
-  private final List<Base64String> privateFor;
+  private final TesseraBase64String privateFrom;
+  private final List<TesseraBase64String> privateFor;
 
   public DeployPrivateSmartContractTransaction(
       final Class<T> clazz,
@@ -50,14 +50,14 @@ public class DeployPrivateSmartContractTransaction<T extends Contract> implement
       final List<String> privateFor) {
     this.clazz = clazz;
     this.senderCredentials = Credentials.create(transactionSigningKey);
-    this.privateFrom = Base64String.wrap(privateFrom);
-    this.privateFor = Base64String.wrapList(privateFor);
+    this.privateFrom = TesseraBase64String.wrap(privateFrom);
+    this.privateFor = TesseraBase64String.wrapList(privateFor);
   }
 
   @Override
   public T execute(final NodeRequests node) {
 
-    final PrivateTransactionManager privateTransactionManager =
+    final TesseraTransactionManager privateTransactionManager =
         node.privacy()
             .getTransactionManager(
                 senderCredentials, privateFrom, privateFor, Restriction.RESTRICTED);

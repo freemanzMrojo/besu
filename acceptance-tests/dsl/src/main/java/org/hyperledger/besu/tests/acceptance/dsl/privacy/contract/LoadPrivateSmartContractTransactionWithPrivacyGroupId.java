@@ -14,6 +14,8 @@
  */
 package org.hyperledger.besu.tests.acceptance.dsl.privacy.contract;
 
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.NodeRequests;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.Transaction;
 
@@ -23,7 +25,6 @@ import java.math.BigInteger;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.tx.Contract;
-import org.web3j.tx.PrivateTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.BesuPrivacyGasProvider;
 import org.web3j.tx.gas.ContractGasProvider;
@@ -39,7 +40,7 @@ public class LoadPrivateSmartContractTransactionWithPrivacyGroupId<T extends Con
 
   private final Class<T> clazz;
   private final Credentials senderCredentials;
-  private final Base64String privateFrom;
+  private final TesseraBase64String privateFrom;
   private final Base64String privacyGroupId;
   private final String contractAddress;
 
@@ -53,14 +54,14 @@ public class LoadPrivateSmartContractTransactionWithPrivacyGroupId<T extends Con
     this.contractAddress = contractAddress;
     this.clazz = clazz;
     this.senderCredentials = Credentials.create(transactionSigningKey);
-    this.privateFrom = Base64String.wrap(privateFrom);
+    this.privateFrom = TesseraBase64String.wrap(privateFrom);
     this.privacyGroupId = Base64String.wrap(privacyGroupId);
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public T execute(final NodeRequests node) {
-    final PrivateTransactionManager privateTransactionManager =
+    final TesseraTransactionManager privateTransactionManager =
         node.privacy()
             .getTransactionManager(
                 senderCredentials, privateFrom, privacyGroupId, Restriction.RESTRICTED);

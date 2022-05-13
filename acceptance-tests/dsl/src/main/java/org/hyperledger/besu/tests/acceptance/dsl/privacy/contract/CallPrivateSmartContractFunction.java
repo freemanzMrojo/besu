@@ -14,6 +14,8 @@
  */
 package org.hyperledger.besu.tests.acceptance.dsl.privacy.contract;
 
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.NodeRequests;
 import org.hyperledger.besu.tests.acceptance.dsl.transaction.Transaction;
 
@@ -22,7 +24,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.web3j.crypto.Credentials;
-import org.web3j.tx.PrivateTransactionManager;
 import org.web3j.tx.gas.BesuPrivacyGasProvider;
 import org.web3j.utils.Base64String;
 import org.web3j.utils.Restriction;
@@ -35,8 +36,8 @@ public class CallPrivateSmartContractFunction implements Transaction<String> {
   private final String encodedFunction;
   private final Credentials senderCredentials;
   private final Restriction restriction;
-  private final Base64String privateFrom;
-  private final List<Base64String> privateFor;
+  private final TesseraBase64String privateFrom;
+  private final List<TesseraBase64String> privateFor;
   private final Base64String privacyGroupId;
 
   public CallPrivateSmartContractFunction(
@@ -86,14 +87,14 @@ public class CallPrivateSmartContractFunction implements Transaction<String> {
     this.encodedFunction = encodedFunction;
     this.senderCredentials = Credentials.create(transactionSigningKey);
     this.restriction = restriction;
-    this.privateFrom = Base64String.wrap(privateFrom);
-    this.privateFor = privateFor != null ? Base64String.wrapList(privateFor) : null;
+    this.privateFrom = TesseraBase64String.wrap(privateFrom);
+    this.privateFor = privateFor != null ? TesseraBase64String.wrapList(privateFor) : null;
     this.privacyGroupId = privacyGroupId != null ? Base64String.wrap(privacyGroupId) : null;
   }
 
   @Override
   public String execute(final NodeRequests node) {
-    final PrivateTransactionManager privateTransactionManager;
+    final TesseraTransactionManager privateTransactionManager;
 
     if (privateFor != null) {
       privateTransactionManager =

@@ -41,6 +41,8 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.tuweni.bytes.Bytes;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraBase64String;
+import org.hyperledger.besu.tests.acceptance.dsl.privacy.web3j.TesseraTransactionManager;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.besu.Besu;
@@ -57,7 +59,6 @@ import org.web3j.protocol.eea.crypto.RawPrivateTransaction;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.tx.ChainIdLong;
 import org.web3j.tx.Contract;
-import org.web3j.tx.PrivateTransactionManager;
 import org.web3j.tx.response.PollingPrivateTransactionReceiptProcessor;
 import org.web3j.utils.Base64String;
 import org.web3j.utils.Numeric;
@@ -67,12 +68,12 @@ public class PrivacyRequestFactory {
 
   private final SecureRandom secureRandom;
 
-  public PrivateTransactionManager getTransactionManager(
+  public TesseraTransactionManager getTransactionManager(
       final Credentials credentials,
-      final Base64String privateFrom,
-      final List<Base64String> privateFor,
+      final TesseraBase64String privateFrom,
+      final List<TesseraBase64String> privateFor,
       final Restriction restriction) {
-    return new PrivateTransactionManager(
+    return new TesseraTransactionManager(
         getBesuClient(),
         credentials,
         new PollingPrivateTransactionReceiptProcessor(getBesuClient(), 1000, 60),
@@ -82,12 +83,12 @@ public class PrivacyRequestFactory {
         restriction);
   }
 
-  public PrivateTransactionManager getTransactionManager(
+  public TesseraTransactionManager getTransactionManager(
       final Credentials credentials,
-      final Base64String privateFrom,
+      final TesseraBase64String privateFrom,
       final Base64String privacyGroupId,
       final Restriction restriction) {
-    return new PrivateTransactionManager(
+    return new TesseraTransactionManager(
         getBesuClient(),
         credentials,
         new PollingPrivateTransactionReceiptProcessor(getBesuClient(), 1000, 60),
