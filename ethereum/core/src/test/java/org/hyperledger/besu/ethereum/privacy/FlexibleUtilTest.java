@@ -1,7 +1,22 @@
+/*
+ * Copyright ConsenSys AG.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package org.hyperledger.besu.ethereum.privacy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.tuweni.bytes.Bytes;
@@ -39,5 +54,17 @@ public class FlexibleUtilTest {
     assertThat(actualParticipants).hasSize(2);
     assertThat(actualParticipants.get(0)).isEqualTo(expectedECParticipant1);
     assertThat(actualParticipants.get(1)).isEqualTo(expectedECParticipant2);
+  }
+
+  @Test
+  public void testDecodeList() {
+    // FIXME review this test when the encoded list is correct for EC enclave pub keys
+    Bytes bytes =
+        Bytes.fromBase64String(
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEvJwuKk");
+
+    List<String> salida = FlexiblePrivacyGroupContract.decodeList(bytes);
+
+    assertThat(salida).isEqualTo(Arrays.asList(""));
   }
 }
