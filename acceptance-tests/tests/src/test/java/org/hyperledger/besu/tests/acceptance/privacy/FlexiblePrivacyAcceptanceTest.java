@@ -58,7 +58,8 @@ public class FlexiblePrivacyAcceptanceTest extends FlexiblePrivacyAcceptanceTest
   private final EnclaveType enclaveType;
   private final EnclaveEncryptorType enclaveEncryptorType;
 
-  public FlexiblePrivacyAcceptanceTest(final EnclaveType enclaveType, final EnclaveEncryptorType enclaveEncryptorType) {
+  public FlexiblePrivacyAcceptanceTest(
+      final EnclaveType enclaveType, final EnclaveEncryptorType enclaveEncryptorType) {
     this.enclaveType = enclaveType;
     this.enclaveEncryptorType = enclaveEncryptorType;
   }
@@ -66,10 +67,10 @@ public class FlexiblePrivacyAcceptanceTest extends FlexiblePrivacyAcceptanceTest
   @Parameters(name = "{0} enclave type with {1} encryptor")
   public static Collection<Object[]> enclaveParameters() {
     return Arrays.asList(
-            new Object[][] {
-                    {TESSERA, NACL},
-                    {TESSERA, EC}
-            });
+        new Object[][] {
+          {TESSERA, NACL},
+          {TESSERA, EC}
+        });
   }
 
   private PrivacyNode alice;

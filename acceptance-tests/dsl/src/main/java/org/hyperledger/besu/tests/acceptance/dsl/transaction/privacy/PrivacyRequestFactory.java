@@ -323,7 +323,8 @@ public class PrivacyRequestFactory {
             Numeric.toHexString(
                 PrivateTransactionEncoder.signMessage(
                     privateTransaction, Credentials.create(creator.getTransactionSigningKey()))));
-    final String transactionHash = ethSendTransactionRequest.send().getTransactionHash();
+    final EthSendTransaction ethSendTransaction = ethSendTransactionRequest.send();
+    final String transactionHash = ethSendTransaction.getTransactionHash();
     return new PrivxCreatePrivacyGroupResponse(privacyGroupId.toBase64String(), transactionHash);
   }
 
