@@ -123,11 +123,15 @@ public class FlexiblePrivacyController extends AbstractRestrictedPrivacyControll
         privateTransactionSimulator.process(
             privacyGroupId, buildCallParams(GET_PARTICIPANTS_METHOD_SIGNATURE));
 
+    LOG.error("LLEGA AQUI 1: " + privateTransactionSimulatorResultOptional.isPresent());
+
     if (privateTransactionSimulatorResultOptional.isPresent()
         && privateTransactionSimulatorResultOptional.get().isSuccessful()) {
+      LOG.error("LLEGA AQUI 2: " + privateTransactionSimulatorResultOptional.get().getOutput());
       final RLPInput rlpInput =
           RLP.input(privateTransactionSimulatorResultOptional.get().getOutput());
       if (rlpInput.nextSize() > 0) {
+        LOG.error("LLEGA AQUI 3: " + rlpInput.raw().toBase64String());
         return Optional.of(
             new PrivacyGroup(
                 privacyGroupId, PrivacyGroup.Type.FLEXIBLE, "", "", decodeList(rlpInput.raw())));
@@ -272,7 +276,9 @@ public class FlexiblePrivacyController extends AbstractRestrictedPrivacyControll
     if (FlexibleUtil.isGroupAdditionTransaction(privateTransaction)) {
       final List<PrivateTransactionMetadata> privateTransactionMetadataList =
           buildTransactionMetadataList(privacyGroupId);
+      LOG.error("buildAndSendAddPayload ENTRA AQUI 1");
       if (!privateTransactionMetadataList.isEmpty()) {
+        LOG.error("buildAndSendAddPayload ENTRA AQUI 2");
         final List<PrivateTransactionWithMetadata> privateTransactionWithMetadataList =
             retrievePrivateTransactions(
                 privacyGroupId, privateTransactionMetadataList, privacyUserId);
@@ -283,6 +289,8 @@ public class FlexiblePrivacyController extends AbstractRestrictedPrivacyControll
             enclave.send(bytes.toBase64String(), privacyUserId, privateFor).getKey());
       }
     }
+    LOG.error("buildAndSendAddPayload ESTA VACIO");
+
     return Optional.empty();
   }
 

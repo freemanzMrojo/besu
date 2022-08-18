@@ -94,7 +94,7 @@ public class PrivateTransactionProcessor {
       final Function<Long, Hash> blockHashLookup,
       final Bytes privacyGroupId) {
     try {
-      LOG.trace("Starting private execution of {}", transaction);
+      LOG.error("Starting private execution of {}", transaction);
 
       final Address senderAddress = transaction.getSender();
       final EvmAccount maybePrivateSender = privateWorldState.getAccount(senderAddress);
@@ -110,7 +110,7 @@ public class PrivateTransactionProcessor {
       }
 
       final long previousNonce = sender.incrementNonce();
-      LOG.trace(
+      LOG.error(
           "Incremented private sender {} nonce ({} -> {})",
           senderAddress,
           previousNonce,
@@ -142,7 +142,7 @@ public class PrivateTransactionProcessor {
         final Address privateContractAddress =
             Address.privateContractAddress(senderAddress, previousNonce, privacyGroupId);
 
-        LOG.debug(
+        LOG.error(
             "Calculated contract address {} from sender {} with nonce {} and privacy group {}",
             privateContractAddress,
             senderAddress,
