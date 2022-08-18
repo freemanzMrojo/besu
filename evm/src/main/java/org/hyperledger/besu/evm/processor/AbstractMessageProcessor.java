@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.tuweni.bytes.Bytes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A skeletal class for instantiating message processors.
@@ -69,6 +71,7 @@ public abstract class AbstractMessageProcessor {
 
   // List of addresses to force delete when they are touched but empty
   // when the state changes in the message are were not meant to be committed.
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractMessageProcessor.class);
   private final Collection<? super Address> forceDeleteAccountsWhenEmpty;
   private final EVM evm;
 
@@ -166,10 +169,12 @@ public abstract class AbstractMessageProcessor {
 
   public void process(final MessageFrame frame, final OperationTracer operationTracer) {
     if (frame.getState() == MessageFrame.State.NOT_STARTED) {
+      LOG.error("PAYLOAD SI NOT_STARTED: " + frame.getInputData().toBase64String());
       start(frame, operationTracer);
     }
 
     if (frame.getState() == MessageFrame.State.CODE_EXECUTING) {
+      LOG.error("PAYLOAD SI CODE_EXECUTING: " + frame.getInputData().toBase64String());
       codeExecute(frame, operationTracer);
 
       if (frame.getState() == MessageFrame.State.CODE_SUSPENDED) {
@@ -177,6 +182,7 @@ public abstract class AbstractMessageProcessor {
       }
 
       if (frame.getState() == MessageFrame.State.CODE_SUCCESS) {
+        LOG.error("PAYLOAD SI CODE_SUCCESS: " + frame.getInputData().toBase64String());
         codeSuccess(frame, operationTracer);
       }
     }
@@ -186,14 +192,17 @@ public abstract class AbstractMessageProcessor {
     }
 
     if (frame.getState() == MessageFrame.State.REVERT) {
+      LOG.error("PAYLOAD SI REVERT: " + frame.getInputData().toBase64String());
       revert(frame);
     }
 
     if (frame.getState() == MessageFrame.State.COMPLETED_SUCCESS) {
+      LOG.error("PAYLOAD SI COMPLETED_SUCCESS: " + frame.getInputData().toBase64String());
       completedSuccess(frame);
     }
 
     if (frame.getState() == MessageFrame.State.COMPLETED_FAILED) {
+      LOG.error("PAYLOAD SI COMPLETED_FAILED: " + frame.getInputData().toBase64String());
       completedFailed(frame);
     }
   }

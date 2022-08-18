@@ -41,12 +41,18 @@ public class FlexibleUtil {
 
   public static List<String> getParticipantsFromParameter(final Bytes input) {
     final List<String> participants = new ArrayList<>();
-    final Bytes mungedParticipants = input.slice(4 + 32 + 32);
-    final int numberOfParticipants = input.slice(32 + 32, 4).toInt();
-    final int participantSize = mungedParticipants.size() / numberOfParticipants;
+    final int numberOfParticipants = input.slice(4 + 32, 32).toBigInteger().intValue();
+    // Method selector + offset +  number of participants + (offset * number of participants)
+    final Bytes mungedParticipants = input.slice(4 + 32 + 32 + (32 * numberOfParticipants));
+    // The participant value is enclosed in the closest multiple of 32 (for instance, 91 would be
+    // enclosed in 96)
+    final int sliceSize = mungedParticipants.size() / numberOfParticipants;
+    // All the participants have to have the same size, so it is enough to check the first one
+    final int participantSize = mungedParticipants.slice(0, 32).toBigInteger().intValue();
 
-    for (int i = 0; i <= mungedParticipants.size() - participantSize; i += participantSize) {
-      participants.add(mungedParticipants.slice(i, participantSize).toBase64String());
+    for (int i = 0; i <= mungedParticipants.size() - sliceSize; i += sliceSize) {
+      // The size of each participant (as of now, either 32 or 91) is stored in 32 bytes
+      participants.add(mungedParticipants.slice(i + 32, participantSize).toBase64String());
     }
 
     return participants;
