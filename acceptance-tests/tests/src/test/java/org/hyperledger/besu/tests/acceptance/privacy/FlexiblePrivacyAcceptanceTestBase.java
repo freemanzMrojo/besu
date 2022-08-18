@@ -120,8 +120,6 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
     output.append("0000000000000000000000000000000000000000000000000000000000000020");
     // Length of the array (with padded zeros to the left)
     output.append(Quantity.longToPaddedHex(members.length, 32).substring(2));
-    // Offset of the elements of the array
-    output.append(Quantity.longToPaddedHex(members.length, members.length * 32).substring(2));
     // TODO continue here
     // Each member enclave key converted from Base64 to bytes
     for (final String member : members) {

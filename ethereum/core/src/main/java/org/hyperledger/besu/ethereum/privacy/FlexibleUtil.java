@@ -65,8 +65,7 @@ public class FlexibleUtil {
     return getParticipantsFromMungedParticipants(mungedParticipants, lengthOfList);
   }
 
-  @VisibleForTesting
-  public static List<String> getParticipantsFromMungedParticipants(
+  private static List<String> getParticipantsFromMungedParticipants(
       final Bytes mungedParticipants, final int numberOfParticipants) {
     final List<String> participants = new ArrayList<>();
     // The participant value is enclosed in the closest multiple of 32 (for instance, 91 would be
