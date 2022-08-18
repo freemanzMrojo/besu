@@ -41,6 +41,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.tuweni.bytes.Bytes;
 import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.Utils;
+import org.web3j.abi.datatypes.DynamicArray;
+import org.web3j.abi.datatypes.DynamicBytes;
+import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3jService;
@@ -102,8 +106,6 @@ public class PrivacyRequestFactory {
 
   public static class GetPrivateTransactionResponse
       extends Response<PrivateTransactionGroupResponse> {}
-
-  public static class JsonRpcSuccessResponseResponse extends Response<String> {}
 
   public static class CreatePrivacyGroupResponse extends Response<String> {}
 
@@ -324,8 +326,7 @@ public class PrivacyRequestFactory {
             Numeric.toHexString(
                 PrivateTransactionEncoder.signMessage(
                     privateTransaction, Credentials.create(creator.getTransactionSigningKey()))));
-    final EthSendTransaction ethSendTransaction = ethSendTransactionRequest.send();
-    final String transactionHash = ethSendTransaction.getTransactionHash();
+    final String transactionHash = ethSendTransactionRequest.send().getTransactionHash();
     return new PrivxCreatePrivacyGroupResponse(privacyGroupId.toBase64String(), transactionHash);
   }
 
@@ -590,17 +591,17 @@ public class PrivacyRequestFactory {
   }
 
   private Bytes encodeAddToGroupFunctionCall(final List<Bytes> participants) {
-    final org.web3j.abi.datatypes.Function function =
-        new org.web3j.abi.datatypes.Function(
+    final Function function =
+        new Function(
             "addParticipants",
             Arrays.asList(
-                new org.web3j.abi.datatypes.DynamicArray<>(
-                    org.web3j.abi.datatypes.DynamicBytes.class,
-                    org.web3j.abi.Utils.typeMap(
+                new DynamicArray<>(
+                    DynamicBytes.class,
+                    Utils.typeMap(
                         participants.stream()
                             .map(Bytes::toArrayUnsafe)
                             .collect(Collectors.toList()),
-                        org.web3j.abi.datatypes.DynamicBytes.class))),
+                        DynamicBytes.class))),
             Collections.emptyList());
 
     return Bytes.fromHexString(FunctionEncoder.encode(function));
