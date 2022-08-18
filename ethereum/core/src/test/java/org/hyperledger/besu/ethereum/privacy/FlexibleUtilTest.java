@@ -27,6 +27,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class FlexibleUtilTest {
 
+  private static final String EXPECTED_EC_PARTICIPANT_1 =
+      "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAES8nC4qT/KdoAoTSF3qs/47DUsDihyVbWiRjZAiyvqp9eSDkqV1RzlM+58oOwnpFRwvWNZM+AxMVxT+MvxdsqMA==";
+
+  private static final String EXPECTED_EC_PARTICIPANT_2 =
+      "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEXIgZqRA25V+3nN+Do6b5r0jiUunub6ubjPhqwHpPxP44uUYh9RKCQNRnsqCJ9PjeTnC8R3ieJk7HWAlycU1bug==";
+
   @Test
   public void testGetParticipantsFromParameter() {
     final String parameterNaCl =
@@ -43,18 +49,13 @@ public class FlexibleUtilTest {
 
     final String parameterEC =
         "llol7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFswWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARLycLipP8p2gChNIXeqz/jsNSwOKHJVtaJGNkCLK+qn15IOSpXVHOUz7nyg7CekVHC9Y1kz4DExXFP4y/F2yowAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABFyIGakQNuVft5zfg6Om+a9I4lLp7m+rm4z4asB6T8T+OLlGIfUSgkDUZ7KgifT43k5wvEd4niZOx1gJcnFNW7oAAAAAAA==";
-    final String expectedECParticipant1 =
-        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAES8nC4qT/KdoAoTSF3qs/47DUsDihyVbWiRjZAiyvqp9eSDkqV1RzlM+58oOwnpFRwvWNZM+AxMVxT+MvxdsqMA==";
-
-    final String expectedECParticipant2 =
-        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEXIgZqRA25V+3nN+Do6b5r0jiUunub6ubjPhqwHpPxP44uUYh9RKCQNRnsqCJ9PjeTnC8R3ieJk7HWAlycU1bug==";
 
     actualParticipants =
         FlexibleUtil.getParticipantsFromParameter(Bytes.fromBase64String(parameterEC));
 
     assertThat(actualParticipants).hasSize(2);
-    assertThat(actualParticipants.get(0)).isEqualTo(expectedECParticipant1);
-    assertThat(actualParticipants.get(1)).isEqualTo(expectedECParticipant2);
+    assertThat(actualParticipants.get(0)).isEqualTo(EXPECTED_EC_PARTICIPANT_1);
+    assertThat(actualParticipants.get(1)).isEqualTo(EXPECTED_EC_PARTICIPANT_2);
 
     final String parameterEC2 =
         "llol7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABbMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAES8nC4qT/KdoAoTSF3qs/47DUsDihyVbWiRjZAiyvqp9eSDkqV1RzlM+58oOwnpFRwvWNZM+AxMVxT+MvxdsqMAAAAAAA";
@@ -63,18 +64,24 @@ public class FlexibleUtilTest {
         FlexibleUtil.getParticipantsFromParameter(Bytes.fromBase64String(parameterEC2));
 
     assertThat(actualParticipants).hasSize(1);
-    assertThat(actualParticipants.get(0)).isEqualTo(expectedECParticipant1);
+    assertThat(actualParticipants.get(0)).isEqualTo(EXPECTED_EC_PARTICIPANT_1);
   }
 
   @Test
   public void testDecodeList() {
-    // FIXME review this test when the encoded list is correct for EC enclave pub keys
-    Bytes bytes =
+    final Bytes rlpEncodedOneParticipant =
         Bytes.fromBase64String(
             "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFswWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARLycLipP8p2gChNIXeqz/jsNSwOKHJVtaJGNkCLK+qn15IOSpXVHOUz7nyg7CekVHC9Y1kz4DExXFP4y/F2yowAAAAAAA=");
 
-    List<String> actualParticipants = FlexiblePrivacyGroupContract.decodeList(bytes);
+    List<String> actualParticipants = FlexibleUtil.decodeList(rlpEncodedOneParticipant);
 
-    assertThat(actualParticipants).isEqualTo(Arrays.asList(""));
+    assertThat(actualParticipants).isEqualTo(Arrays.asList(EXPECTED_EC_PARTICIPANT_1));
+
+    final Bytes wrongBytes =
+        Bytes.fromBase64String(
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==");
+
+    actualParticipants = FlexibleUtil.decodeList(wrongBytes);
+    assertThat(actualParticipants).isEmpty();
   }
 }
