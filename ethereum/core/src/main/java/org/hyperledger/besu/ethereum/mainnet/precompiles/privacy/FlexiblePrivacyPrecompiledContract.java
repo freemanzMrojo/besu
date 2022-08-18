@@ -136,9 +136,6 @@ public class FlexiblePrivacyPrecompiledContract extends PrivacyPrecompiledContra
       return NO_RESULT;
     }
 
-    LOG.error(
-        "PRIVATEFROM ANTES DE EJECUTAR: " + privateTransaction.getPrivateFrom().toBase64String());
-
     final Optional<Bytes> maybeGroupId = privateTransaction.getPrivacyGroupId();
     if (maybeGroupId.isEmpty()) {
       return NO_RESULT;
@@ -146,7 +143,7 @@ public class FlexiblePrivacyPrecompiledContract extends PrivacyPrecompiledContra
 
     final Bytes32 privacyGroupId = Bytes32.wrap(maybeGroupId.get());
 
-    LOG.error("Processing private transaction {} in privacy group {}", pmtHash, privacyGroupId);
+    LOG.debug("Processing private transaction {} in privacy group {}", pmtHash, privacyGroupId);
 
     final ProcessableBlockHeader currentBlockHeader =
         (ProcessableBlockHeader) messageFrame.getBlockValues();
@@ -179,8 +176,6 @@ public class FlexiblePrivacyPrecompiledContract extends PrivacyPrecompiledContra
         privateFrom)) {
       return NO_RESULT;
     }
-
-    LOG.error("PAYLOAD ANTES DE EJECUTAR: " + privateTransaction.getPayload().toBase64String());
 
     final TransactionProcessingResult result =
         processPrivateTransaction(
