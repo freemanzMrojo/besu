@@ -20,7 +20,7 @@ contract FlexiblePrivacyGroupManagementProxy is FlexiblePrivacyGroupManagementIn
 
     address public implementation;
 
-    constructor(address _implementation) public {
+    constructor(address _implementation) {
         implementation = _implementation;
     }
 

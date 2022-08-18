@@ -69,7 +69,7 @@ contract DefaultFlexiblePrivacyGroupManagementContract is FlexiblePrivacyGroupMa
         return distributionList;
     }
 
-    function canUpgrade() external override returns (bool) {
+    function canUpgrade() external view override returns (bool) {
         return tx.origin == _owner;
     }
 
@@ -120,7 +120,7 @@ contract DefaultFlexiblePrivacyGroupManagementContract is FlexiblePrivacyGroupMa
         return false;
     }
 
-    function updateVersion() internal returns (int) {
+    function updateVersion() internal {
         _version = keccak256(abi.encode(blockhash(block.number-1), block.coinbase, distributionList));
     }
 
