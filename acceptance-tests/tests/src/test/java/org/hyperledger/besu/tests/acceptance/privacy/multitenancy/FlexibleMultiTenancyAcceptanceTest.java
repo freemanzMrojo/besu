@@ -459,7 +459,7 @@ public class FlexibleMultiTenancyAcceptanceTest extends FlexiblePrivacyAcceptanc
             privacyGroupId, groupCreatorNode, groupCreatorTenant);
     final PrivateTransactionReceipt expectedReceipt =
         buildExpectedAddMemberTransactionReceipt(
-            privacyGroupId, groupCreatorNode, groupCreatorTenant, members.toArray(new String[] {}));
+            privacyGroupId, groupCreatorNode, groupCreatorTenant, members);
 
     for (final MultiTenancyPrivacyNode mtpn : multiTenancyPrivacyNodes) {
       final PrivacyNode privacyNode = mtpn.getPrivacyNode();

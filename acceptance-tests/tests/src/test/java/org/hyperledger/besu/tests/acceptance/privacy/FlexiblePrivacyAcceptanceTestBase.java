@@ -82,8 +82,7 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
     final String commitmentHash =
         callGetParticipantsMethodAndReturnCommitmentHash(privacyGroupId, groupCreator, privateFrom);
     final PrivateTransactionReceipt expectedReceipt =
-        buildExpectedAddMemberTransactionReceipt(
-            privacyGroupId, groupCreator, addresses.toArray(new String[] {}));
+        buildExpectedAddMemberTransactionReceipt(privacyGroupId, groupCreator, addresses);
 
     for (final PrivacyNode member : members) {
       member.verify(
@@ -106,7 +105,7 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
   }
 
   protected PrivateTransactionReceipt buildExpectedAddMemberTransactionReceipt(
-      final String privacyGroupId, final PrivacyNode groupCreator, final String[] members) {
+      final String privacyGroupId, final PrivacyNode groupCreator, final List<String> members) {
     return buildExpectedAddMemberTransactionReceipt(
         privacyGroupId, groupCreator, groupCreator.getEnclaveKey(), members);
   }
@@ -115,7 +114,7 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
       final String privacyGroupId,
       final PrivacyNode groupCreator,
       final String privateFrom,
-      final String[] members) {
+      final List<String> members) {
 
     final StringBuilder output = new StringBuilder();
     // hex prefix
@@ -128,7 +127,7 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
                 new DynamicArray<>(
                     DynamicBytes.class,
                     Utils.typeMap(
-                        Arrays.stream(members)
+                        members.stream()
                             .map(Bytes::fromBase64String)
                             .map(Bytes::toArrayUnsafe)
                             .collect(Collectors.toList()),
