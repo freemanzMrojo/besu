@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hyperledger.besu.ethereum.core.PrivacyParameters.FLEXIBLE_PRIVACY_PROXY;
 import static org.hyperledger.besu.ethereum.privacy.group.FlexibleGroupManagement.GET_PARTICIPANTS_METHOD_SIGNATURE;
 
-import org.hyperledger.besu.ethereum.api.jsonrpc.internal.results.Quantity;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.PrivacyAcceptanceTestBase;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.PrivacyNode;
 import org.hyperledger.besu.tests.acceptance.dsl.privacy.condition.ExpectValidFlexiblePrivacyGroupCreated;
@@ -32,6 +31,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.tuweni.bytes.Bytes;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.Utils;
+import org.web3j.abi.datatypes.DynamicArray;
+import org.web3j.abi.datatypes.DynamicBytes;
 import org.web3j.protocol.besu.response.privacy.PrivateTransactionReceipt;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
@@ -113,18 +116,25 @@ public class FlexiblePrivacyAcceptanceTestBase extends PrivacyAcceptanceTestBase
       final PrivacyNode groupCreator,
       final String privateFrom,
       final String[] members) {
+
     final StringBuilder output = new StringBuilder();
     // hex prefix
     output.append("0x");
-    // Dynamic array offset
-    output.append("0000000000000000000000000000000000000000000000000000000000000020");
-    // Length of the array (with padded zeros to the left)
-    output.append(Quantity.longToPaddedHex(members.length, 32).substring(2));
-    // TODO continue here
-    // Each member enclave key converted from Base64 to bytes
-    for (final String member : members) {
-      output.append(Bytes.fromBase64String(member).toUnprefixedHexString());
-    }
+
+    final String encodedParameters =
+        FunctionEncoder.encode(
+            "",
+            Arrays.asList(
+                new DynamicArray<>(
+                    DynamicBytes.class,
+                    Utils.typeMap(
+                        Arrays.stream(members)
+                            .map(Bytes::fromBase64String)
+                            .map(Bytes::toArrayUnsafe)
+                            .collect(Collectors.toList()),
+                        DynamicBytes.class))));
+
+    output.append(encodedParameters);
 
     return new PrivateTransactionReceipt(
         null,
