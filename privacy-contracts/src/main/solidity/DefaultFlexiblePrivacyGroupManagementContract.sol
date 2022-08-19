@@ -109,7 +109,7 @@ contract DefaultFlexiblePrivacyGroupManagementContract is FlexiblePrivacyGroupMa
         if (index > 0 && index <= distributionList.length) {
             //move last address into index being vacated (unless we are dealing with last index)
             if (index != distributionList.length) {
-                bytes memory lastPublicKey = distributionList[distributionList.length - 1];
+                bytes storage lastPublicKey = distributionList[distributionList.length - 1];
                 distributionList[index - 1] = lastPublicKey;
                 distributionIndexOf[lastPublicKey] = index;
             }

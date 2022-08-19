@@ -41,7 +41,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.tuweni.bytes.Bytes;
 import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
 import org.web3j.abi.Utils;
+import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.DynamicBytes;
 import org.web3j.abi.datatypes.Function;
@@ -235,7 +237,13 @@ public class PrivacyRequestFactory {
   }
 
   private Bytes encodeRemoveFromGroupFunctionCall(final Bytes toRemove) {
-    return Bytes.concatenate(FlexibleGroupManagement.REMOVE_PARTICIPANT_METHOD_SIGNATURE, toRemove);
+    final Function function =
+        new Function(
+            "removeParticipant",
+            Arrays.asList(new DynamicBytes(toRemove.toArrayUnsafe())),
+            Arrays.asList(new TypeReference<Bool>() {}));
+
+    return Bytes.fromHexString(FunctionEncoder.encode(function));
   }
 
   public String privxLockPrivacyGroup(
